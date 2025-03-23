@@ -4,9 +4,6 @@ import com.fizalise.dailyfitness.entity.Activity;
 import com.fizalise.dailyfitness.entity.Gender;
 import com.fizalise.dailyfitness.entity.Goal;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.Column;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.*;
 import org.hibernate.validator.constraints.Length;
 

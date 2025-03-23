@@ -13,8 +13,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.lang.Long;
-
 @Service
 @Slf4j(topic = "Сервис пользователей")
 @RequiredArgsConstructor
