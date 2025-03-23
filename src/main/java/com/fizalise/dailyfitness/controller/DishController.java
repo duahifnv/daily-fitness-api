@@ -23,4 +23,10 @@ public class DishController {
     public List<DishDto> getAllDishes(@RequestParam(defaultValue = "0") @Min(0) Integer page) {
         return dishMapper.toDtos(dishService.findAllDishes(page));
     }
+    @Operation(summary = "Получить блюдо")
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public DishDto getDish(@PathVariable Long id) {
+        return dishMapper.toDto(dishService.findDish(id));
+    }
 }
