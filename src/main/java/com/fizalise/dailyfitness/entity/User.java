@@ -29,6 +29,12 @@ public class User {
     @Column(name = "email", nullable = false)
     private String email;
 
+    @Size(max = 10)
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "gender", nullable = false)
+    private Gender gender;
+
     @NotNull
     @Column(name = "age", nullable = false)
     private Integer age;
@@ -41,14 +47,21 @@ public class User {
     @Column(name = "growth", nullable = false, precision = 5, scale = 2)
     private BigDecimal growth;
 
-    @Size(max = 50)
-    @NotNull
-    @Column(name = "goal", nullable = false, length = 50)
-    private String goal;
-
     @NotNull
     @Column(name = "daily_norm", nullable = false)
     private Integer dailyNorm;
+
+    @Size(max = 50)
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "goal", nullable = false)
+    private Goal goal;
+
+    @Size(max = 50)
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "activity", nullable = false)
+    private Activity activity;
 
     @Size(max = 50)
     @Enumerated(EnumType.STRING)

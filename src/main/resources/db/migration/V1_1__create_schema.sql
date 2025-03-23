@@ -3,11 +3,14 @@ create table users
     id         bigserial     not null primary key,
     name       varchar(100)  not null,
     email      varchar(255)  not null,
+    gender     varchar(10)   not null,
     age        int           not null,
     weight     numeric(4, 1) not null,
     growth     numeric(5, 2) not null,
+    daily_norm int           not null,
     goal       varchar(50)   not null,
-    daily_norm int           not null
+    activity   varchar(50)   not null,
+    role       varchar(50)   not null default 'ROLE_USER'
 );
 
 create table dishes
