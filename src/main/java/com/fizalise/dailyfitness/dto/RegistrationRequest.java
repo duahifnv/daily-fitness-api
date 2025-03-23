@@ -18,27 +18,27 @@ public record RegistrationRequest(
                                   String name,
                                   @NotBlank @Email
                                   @Schema(description = "Почта", format = "email@domen.xx",
-                                          example = "mail@mail.ru")
+                                          example = "user@mail.ru")
                                   String email,
                                   @NotBlank @Length(min = 4, max = 30)
                                   @Schema(description = "Пароль от 4 до 30 символов", minLength = 4,
-                                          maxLength = 30, example = "3afl3ajf")
+                                          maxLength = 30, example = "user")
                                   String password,
-                                  @NotBlank
+                                  @NotNull
                                   @Schema(description = "Пол", enumAsRef = true)
                                   Gender gender,
                                   @NotNull @Min(18) @Max(99)
-                                  @Schema(description = "Возраст", minimum = "18", maximum = "99")
+                                  @Schema(description = "Возраст", minimum = "18", maximum = "99", example = "25")
                                   Integer age,
                                   @NotNull @Min(0)
-                                  @Schema(description = "Вес", minimum = "0")
+                                  @Schema(description = "Вес", minimum = "0", example = "70")
                                   BigDecimal weight,
                                   @NotNull @Min(0)
-                                  @Schema(description = "Рост", minimum = "0")
+                                  @Schema(description = "Рост", minimum = "0", example = "180")
                                   BigDecimal growth,
-                                  @NotBlank
+                                  @NotNull
                                   @Schema(description = "Цель", enumAsRef = true)
                                   Goal goal,
-                                  @NotBlank
+                                  @NotNull
                                   @Schema(description = "Активность", enumAsRef = true)
                                   Activity activity) {}
