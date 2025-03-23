@@ -1,10 +1,16 @@
-insert into users (name, email, gender, age, weight, growth,
+insert into users (name, email, password, gender, age, weight, growth,
                    daily_norm, goal, activity, role)
-values ('admin', 'admin@mail.org', 'male', 20, 65,
+values ('admin', 'admin@mail.org',
+        '$2a$12$lWqWCH2rf2FaFiEoOltaUOfeOqccug2RPc1suW/0kTvW7g3S4zzxa',
+        'male', 20, 65,
         186, 2100, 'WEIGHT_GAIN', 'NONE', 'ROLE_ADMIN'),
-       ('puffy', 'puffy@mail.org', 'male', 25, 90,
+       ('puffy', 'puffy@mail.org',
+        '$2a$12$LjqJKndjPNodFrrufOQUPue3OVq4HsptIkuMH0b9A7AZlH1uJrCx.',
+        'male', 25, 90,
         175, 2700, 'WEIGHT_LOSS', 'MIN', 'ROLE_USER'),
-       ('stacy', 'stacy@mail.org', 'female', 24, 50,
+       ('stacy', 'stacy@mail.org',
+        '$2a$12$ATbIHYewsZSLHT5YD13nmOt7JV5OeOmmzF9NDm28.vOY6yhimXdx6',
+        'female', 24, 50,
         165, 2000, 'WEIGHT_GAIN', 'MIDDLE', 'ROLE_USER');
 
 INSERT INTO dishes (name, cals, proteins, fats, carbs)

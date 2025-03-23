@@ -7,13 +7,18 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.math.BigDecimal;
+import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
 @Data
-public class User {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -29,7 +34,11 @@ public class User {
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @Size(max = 10)
+    @Size(max = 500)
+    @NotNull
+    @Column(name = "password", nullable = false)
+    private String password;
+
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "gender", nullable = false)
@@ -51,20 +60,27 @@ public class User {
     @Column(name = "daily_norm", nullable = false)
     private Integer dailyNorm;
 
-    @Size(max = 50)
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "goal", nullable = false)
     private Goal goal;
 
-    @Size(max = 50)
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "activity", nullable = false)
     private Activity activity;
 
-    @Size(max = 50)
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
     private Role role;
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(role.name()));
+    }
 }
