@@ -1,4 +1,4 @@
-package com.fizalise.dailyfitness.dto;
+package com.fizalise.dailyfitness.dto.authentication;
 
 import com.fizalise.dailyfitness.entity.Activity;
 import com.fizalise.dailyfitness.entity.Gender;

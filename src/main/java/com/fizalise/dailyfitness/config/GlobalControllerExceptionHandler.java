@@ -1,6 +1,6 @@
 package com.fizalise.dailyfitness.config;
 
-import com.fizalise.dailyfitness.dto.MethodNotSupportedResponse;
+import com.fizalise.dailyfitness.dto.validation.MethodNotSupportedResponse;
 import com.fizalise.dailyfitness.dto.validation.ValidationErrorResponse;
 import com.fizalise.dailyfitness.dto.validation.Violation;
 import io.jsonwebtoken.JwtException;

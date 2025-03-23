@@ -1,4 +1,4 @@
-package com.fizalise.dailyfitness.dto;
+package com.fizalise.dailyfitness.dto.validation;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 

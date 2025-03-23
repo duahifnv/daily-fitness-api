@@ -1,8 +1,8 @@
 package com.fizalise.dailyfitness.service;
 
-import com.fizalise.dailyfitness.dto.AuthenticationRequest;
-import com.fizalise.dailyfitness.dto.JwtResponse;
-import com.fizalise.dailyfitness.dto.RegistrationRequest;
+import com.fizalise.dailyfitness.dto.authentication.AuthenticationRequest;
+import com.fizalise.dailyfitness.dto.authentication.JwtResponse;
+import com.fizalise.dailyfitness.dto.authentication.RegistrationRequest;
 import com.fizalise.dailyfitness.entity.Role;
 import com.fizalise.dailyfitness.entity.User;
 import com.fizalise.dailyfitness.exception.CustomBadCredentialsException;

@@ -1,8 +1,8 @@
 package com.fizalise.dailyfitness.controller;
 
-import com.fizalise.dailyfitness.dto.AuthenticationRequest;
-import com.fizalise.dailyfitness.dto.JwtResponse;
-import com.fizalise.dailyfitness.dto.RegistrationRequest;
+import com.fizalise.dailyfitness.dto.authentication.AuthenticationRequest;
+import com.fizalise.dailyfitness.dto.authentication.JwtResponse;
+import com.fizalise.dailyfitness.dto.authentication.RegistrationRequest;
 import com.fizalise.dailyfitness.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;

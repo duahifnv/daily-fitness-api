@@ -1,7 +1,7 @@
 package com.fizalise.dailyfitness.mapper;
 
-import com.fizalise.dailyfitness.dto.RegistrationRequest;
-import com.fizalise.dailyfitness.dto.UserResponse;
+import com.fizalise.dailyfitness.dto.authentication.RegistrationRequest;
+import com.fizalise.dailyfitness.dto.authentication.UserResponse;
 import com.fizalise.dailyfitness.entity.Gender;
 import com.fizalise.dailyfitness.entity.Role;
 import com.fizalise.dailyfitness.entity.User;
