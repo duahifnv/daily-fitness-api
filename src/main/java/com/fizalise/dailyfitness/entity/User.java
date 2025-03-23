@@ -50,4 +50,8 @@ public class User {
     @Column(name = "daily_norm", nullable = false)
     private Integer dailyNorm;
 
+    @Size(max = 50)
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false)
+    private Role role;
 }
