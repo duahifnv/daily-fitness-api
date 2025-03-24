@@ -1,18 +1,22 @@
 package com.fizalise.dailyfitness.service;
 
+import com.fizalise.dailyfitness.dto.MealDto;
 import com.fizalise.dailyfitness.entity.Meal;
 import com.fizalise.dailyfitness.exception.ResourceNotFoundException;
 import com.fizalise.dailyfitness.repository.MealRepository;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j(topic = "Сервис приема пищи")
 public class MealService {
     @Value("${pagination.page-size}")
     private int pageSize;
@@ -26,5 +30,11 @@ public class MealService {
     public Meal findMeal(Long id) {
         return mealRepository.findById(id)
                 .orElseThrow(ResourceNotFoundException::new);
+    }
+    @Transactional
+    public Meal saveMeal(Meal meal) {
+        mealRepository.save(meal);
+        log.info("Сохранен прием пищи: {}", meal);
+        return meal;
     }
 }

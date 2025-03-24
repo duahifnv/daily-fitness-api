@@ -1,12 +1,15 @@
 package com.fizalise.dailyfitness.controller;
 
 import com.fizalise.dailyfitness.dto.MealDto;
+import com.fizalise.dailyfitness.entity.Meal;
 import com.fizalise.dailyfitness.mapper.MealMapper;
 import com.fizalise.dailyfitness.service.MealService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,5 +31,15 @@ public class MealController {
     @ResponseStatus(HttpStatus.OK)
     public MealDto getMeal(@PathVariable Long id) {
         return mealMapper.toDto(mealService.findMeal(id));
+    }
+    @Operation(summary = "Добавить прием пищи")
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("isAuthenticated()")
+    public MealDto addMeal(@RequestBody MealDto mealDto, Authentication authentication) {
+        Meal meal = mealService.saveMeal(
+                mealMapper.toMeal(mealDto, authentication)
+        );
+        return mealMapper.toDto(meal);
     }
 }

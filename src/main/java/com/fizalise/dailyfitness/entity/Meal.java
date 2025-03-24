@@ -35,7 +35,7 @@ public class Meal {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinTable(
             name = "meals_portions",
             joinColumns = @JoinColumn(name = "meal_id"),
