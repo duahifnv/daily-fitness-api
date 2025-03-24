@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,6 +32,7 @@ public class DishController {
     public DishDto getDish(@PathVariable Long id) {
         return dishMapper.toDto(dishService.findDish(id));
     }
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Добавить блюдо")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -38,6 +40,7 @@ public class DishController {
         Dish dish = dishService.saveDish(dishMapper.toDish(dishDto));
         return dishMapper.toDto(dish);
     }
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Изменить блюдо")
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
@@ -46,6 +49,7 @@ public class DishController {
         dishMapper.updateDish(dish, dishDto);
         dishService.saveDish(dish);
     }
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Удалить блюдо")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
