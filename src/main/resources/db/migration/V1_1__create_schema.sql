@@ -2,7 +2,7 @@ create table users
 (
     id         bigserial     not null primary key,
     name       varchar(100)  not null,
-    email      varchar(255)  not null,
+    email      varchar(255)  not null unique,
     password   varchar(500)  not null,
     gender     varchar(10)   not null,
     age        int           not null,
@@ -36,6 +36,11 @@ create table portions
 (
     id      bigserial not null primary key,
     dish_id bigint    not null references dishes (id),
-    grams   int       not null,
-    meal_id bigint    not null references meals (id)
+    grams   int       not null
+);
+
+create table meals_portions(
+    meal_id bigint not null references meals(id),
+    portion_id bigint not null references portions(id),
+    primary key (meal_id, portion_id)
 );

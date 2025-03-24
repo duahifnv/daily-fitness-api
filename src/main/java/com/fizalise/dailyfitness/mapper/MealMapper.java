@@ -10,7 +10,6 @@ import org.mapstruct.Named;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
-import java.util.Set;
 
 @Mapper(componentModel = "spring")
 public interface MealMapper {
@@ -20,8 +19,7 @@ public interface MealMapper {
     MealDto toDto(Meal meal);
     List<MealDto> toDtos(Page<Meal> meals);
     @Mapping(target = "dishId", expression = "java(portion.getDish().getId())")
-    @Mapping(target = "mealId", expression = "java(portion.getMeal().getId())")
     PortionDto toPortionDto(Portion portion);
     @Named("toPortionDtos")
-    List<PortionDto> toPortionDtos(Set<Portion> portions);
+    List<PortionDto> toPortionDtos(List<Portion> portions);
 }

@@ -21,10 +21,4 @@ public class Portion {
     @NotNull
     @Column(name = "grams", nullable = false)
     private Integer grams;
-
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "meal_id", nullable = false)
-    private Meal meal;
-
 }
