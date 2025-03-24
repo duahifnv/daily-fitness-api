@@ -1,6 +1,7 @@
 package com.fizalise.dailyfitness.service;
 
 import com.fizalise.dailyfitness.entity.Meal;
+import com.fizalise.dailyfitness.exception.ResourceNotFoundException;
 import com.fizalise.dailyfitness.repository.MealRepository;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
@@ -21,5 +22,9 @@ public class MealService {
     }
     private PageRequest getPageRequest(Integer page) {
         return PageRequest.of(page, pageSize, Sort.by(Sort.Direction.ASC, "id"));
+    }
+    public Meal findMeal(Long id) {
+        return mealRepository.findById(id)
+                .orElseThrow(ResourceNotFoundException::new);
     }
 }

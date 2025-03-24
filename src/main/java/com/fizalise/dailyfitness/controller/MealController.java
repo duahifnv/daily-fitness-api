@@ -23,4 +23,10 @@ public class MealController {
     public List<MealDto> getAllMeals(@RequestParam(defaultValue = "0") @Min(0) Integer page) {
         return mealMapper.toDtos(mealService.findAllMeals(page));
     }
+    @Operation(summary = "Получить прием пищи")
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public MealDto getMeal(@PathVariable Long id) {
+        return mealMapper.toDto(mealService.findMeal(id));
+    }
 }
