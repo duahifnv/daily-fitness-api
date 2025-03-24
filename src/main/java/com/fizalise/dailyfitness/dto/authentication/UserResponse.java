@@ -11,7 +11,7 @@ public record UserResponse(
         @Schema(description = "Имя пользователя", example = "Юзер")
         String name,
         @Schema(description = "Почта", format = "email@domen.xx",
-                example = "mail@mail.ru")
+                example = "mail@mail.org")
         String email,
         @Schema(description = "Пол", enumAsRef = true)
         Gender gender,

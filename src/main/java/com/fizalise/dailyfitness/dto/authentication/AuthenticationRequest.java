@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 
 public record AuthenticationRequest(@NotBlank @Email
                                     @Schema(description = "Почта", format = "email@domen.xx",
-                                            example = "user@mail.ru") String email,
+                                            example = "user@mail.org") String email,
                                     @NotBlank
                                     @Schema(description = "Пароль", minLength = 4,
                                             maxLength = 30, example = "user") String password) {}

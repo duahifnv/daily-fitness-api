@@ -15,7 +15,7 @@ public record RegistrationRequest(
                                   String name,
                                   @NotBlank @Email
                                   @Schema(description = "Почта", format = "email@domen.xx",
-                                          example = "user@mail.ru")
+                                          example = "user@mail.org")
                                   String email,
                                   @NotBlank @Length(min = 4, max = 30)
                                   @Schema(description = "Пароль от 4 до 30 символов", minLength = 4,
