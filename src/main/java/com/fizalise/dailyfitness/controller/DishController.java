@@ -5,6 +5,7 @@ import com.fizalise.dailyfitness.entity.Dish;
 import com.fizalise.dailyfitness.mapper.DishMapper;
 import com.fizalise.dailyfitness.service.DishService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -33,14 +34,14 @@ public class DishController {
     @Operation(summary = "Добавить блюдо")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public DishDto addDish(@RequestBody DishDto dishDto) {
+    public DishDto addDish(@Valid @RequestBody DishDto dishDto) {
         Dish dish = dishService.saveDish(dishMapper.toDish(dishDto));
         return dishMapper.toDto(dish);
     }
     @Operation(summary = "Изменить блюдо")
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void updateDish(@PathVariable Long id, @RequestBody DishDto dishDto) {
+    public void updateDish(@PathVariable Long id, @Valid @RequestBody DishDto dishDto) {
         Dish dish = dishService.findDish(id);
         dishMapper.updateDish(dish, dishDto);
         dishService.saveDish(dish);

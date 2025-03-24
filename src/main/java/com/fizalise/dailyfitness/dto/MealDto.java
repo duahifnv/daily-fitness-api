@@ -1,6 +1,8 @@
 package com.fizalise.dailyfitness.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 
@@ -15,9 +17,10 @@ public record MealDto(@Schema(description = "ID приема пищи", example 
                       @Schema(description = "Дата приема пищи", example = "2025-03-23", accessMode = Schema.AccessMode.READ_ONLY)
                       LocalDate date,
                       @Schema(description = "ID пользователя", example = "42", accessMode = Schema.AccessMode.READ_ONLY)
+                      @Min(1)
                       Long userId,
                       @Schema(description = "Список порций блюд")
                       @NotEmpty
-                      List<PortionDto> portions
+                      List<@Valid PortionDto> portions
                       ) {
 }

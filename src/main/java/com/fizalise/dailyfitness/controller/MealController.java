@@ -5,6 +5,7 @@ import com.fizalise.dailyfitness.entity.Meal;
 import com.fizalise.dailyfitness.mapper.MealMapper;
 import com.fizalise.dailyfitness.service.MealService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -36,7 +37,7 @@ public class MealController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("isAuthenticated()")
-    public MealDto addMeal(@RequestBody MealDto mealDto, Authentication authentication) {
+    public MealDto addMeal(@Valid @RequestBody MealDto mealDto, Authentication authentication) {
         Meal meal = mealService.saveMeal(
                 mealMapper.toMeal(mealDto, authentication)
         );
