@@ -6,6 +6,7 @@ import com.fizalise.dailyfitness.dto.validation.Violation;
 import io.jsonwebtoken.JwtException;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -30,6 +31,12 @@ public class GlobalControllerExceptionHandler {
     public String handle(Exception e) {
         log.error("Unhandled exception [%s]: %s".formatted(e.getClass().getSimpleName(), e.getMessage()));
         return "Сбой на сервере";
+    }
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<?> handle(DataIntegrityViolationException e) {
+        log.warn("Нарушение целостности данных: {}", e.getMessage());
+        return ResponseEntity.badRequest().body("Действие нарушает целостность данных");
     }
     @ExceptionHandler(NoResourceFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
