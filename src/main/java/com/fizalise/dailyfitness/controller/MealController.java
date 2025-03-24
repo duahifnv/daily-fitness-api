@@ -1,6 +1,7 @@
 package com.fizalise.dailyfitness.controller;
 
 import com.fizalise.dailyfitness.dto.MealDto;
+import com.fizalise.dailyfitness.dto.MealUpdateDto;
 import com.fizalise.dailyfitness.entity.Meal;
 import com.fizalise.dailyfitness.mapper.MealMapper;
 import com.fizalise.dailyfitness.service.MealService;
@@ -42,5 +43,14 @@ public class MealController {
                 mealMapper.toMeal(mealDto, authentication)
         );
         return mealMapper.toDto(meal);
+    }
+    @Operation(summary = "Изменить прием пищи")
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("isAuthenticated()")
+    public void updateMeal(@PathVariable Long id, @Valid @RequestBody MealUpdateDto updateDto) {
+        Meal meal = mealService.findMeal(id);
+        mealMapper.updateMeal(meal, updateDto);
+        mealService.saveMeal(meal);
     }
 }

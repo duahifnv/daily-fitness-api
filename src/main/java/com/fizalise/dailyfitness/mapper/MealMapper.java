@@ -1,6 +1,7 @@
 package com.fizalise.dailyfitness.mapper;
 
 import com.fizalise.dailyfitness.dto.MealDto;
+import com.fizalise.dailyfitness.dto.MealUpdateDto;
 import com.fizalise.dailyfitness.dto.PortionDto;
 import com.fizalise.dailyfitness.entity.Dish;
 import com.fizalise.dailyfitness.entity.Meal;
@@ -8,9 +9,7 @@ import com.fizalise.dailyfitness.entity.Portion;
 import com.fizalise.dailyfitness.entity.User;
 import com.fizalise.dailyfitness.service.DishService;
 import com.fizalise.dailyfitness.service.UserService;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Named;
+import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
@@ -46,6 +45,10 @@ public abstract class MealMapper {
     @Mapping(source = "authentication", target = "user", qualifiedByName = "getUserId")
     @Mapping(target = "portions", qualifiedByName = "toPortions")
     public abstract Meal toMeal(MealDto mealDto, Authentication authentication);
+
+    public void updateMeal(Meal meal, MealUpdateDto updateDto) {
+        meal.setName(updateDto.name());
+    }
 
     @Named("getUserId")
     public User getUser(Authentication authentication) {
