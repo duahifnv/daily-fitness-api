@@ -19,13 +19,13 @@ import java.util.List;
 @RestController
 @RequestMapping("/meals")
 @RequiredArgsConstructor
+@PreAuthorize("isAuthenticated()")
 public class MealController {
     private final MealService mealService;
     private final MealMapper mealMapper;
     @Operation(summary = "Получить список всех приемов пищи пользователя")
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("isAuthenticated()")
     public List<MealDto> getAllMeals(@RequestParam(defaultValue = "0") @Min(0) Integer page,
                                      Authentication authentication) {
         return mealMapper.toDtos(mealService.findAllMeals(page, authentication));
@@ -33,13 +33,12 @@ public class MealController {
     @Operation(summary = "Получить прием пищи")
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public MealDto getMeal(@PathVariable Long id) {
-        return mealMapper.toDto(mealService.findMeal(id));
+    public MealDto getMeal(@PathVariable Long id, Authentication authentication) {
+        return mealMapper.toDto(mealService.findMeal(id, authentication));
     }
     @Operation(summary = "Добавить прием пищи")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("isAuthenticated()")
     public MealDto addMeal(@Valid @RequestBody MealDto mealDto, Authentication authentication) {
         Meal meal = mealService.saveMeal(
                 mealMapper.toMeal(mealDto, authentication)
@@ -49,17 +48,16 @@ public class MealController {
     @Operation(summary = "Изменить прием пищи")
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("isAuthenticated()")
-    public void updateMeal(@PathVariable Long id, @Valid @RequestBody MealUpdateDto updateDto) {
-        Meal meal = mealService.findMeal(id);
+    public void updateMeal(@PathVariable Long id, @Valid @RequestBody MealUpdateDto updateDto,
+                           Authentication authentication) {
+        Meal meal = mealService.findMeal(id, authentication);
         mealMapper.updateMeal(meal, updateDto);
         mealService.saveMeal(meal);
     }
     @Operation(summary = "Удалить прием пищи")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("isAuthenticated()")
-    public void deleteMeal(@PathVariable Long id) {
-        mealService.removeMeal(id);
+    public void deleteMeal(@PathVariable Long id, Authentication authentication) {
+        mealService.removeMeal(id, authentication);
     }
 }

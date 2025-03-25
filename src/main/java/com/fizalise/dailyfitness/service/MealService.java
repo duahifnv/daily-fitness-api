@@ -23,16 +23,19 @@ public class MealService {
     private int pageSize;
     private final MealRepository mealRepository;
     private final UserService userService;
+    private final AuthService authService;
     public Page<Meal> findAllMeals(@Min(0) Integer page, Authentication authentication) {
-        User user = userService.findByUsername(authentication.getName());
+        User user = findUser(authentication);
         return mealRepository.findAllByUser(user, getPageRequest(page));
     }
-    private PageRequest getPageRequest(Integer page) {
-        return PageRequest.of(page, pageSize, Sort.by(Sort.Direction.ASC, "id"));
-    }
-    public Meal findMeal(Long id) {
-        return mealRepository.findById(id)
+    public Meal findMeal(Long id, Authentication authentication) {
+        Meal meal = mealRepository.findById(id)
                 .orElseThrow(ResourceNotFoundException::new);
+        if (!isLegalAccess(meal, authentication)) {
+            log.info("Попытка доступа к чужой задаче от пользователя {}", authentication.getName());
+            throw new ResourceNotFoundException();
+        }
+        return meal;
     }
     @Transactional
     public Meal saveMeal(Meal meal) {
@@ -41,9 +44,19 @@ public class MealService {
         return meal;
     }
     @Transactional
-    public void removeMeal(Long id) {
-        Meal meal = findMeal(id);
+    public void removeMeal(Long id, Authentication authentication) {
+        Meal meal = findMeal(id, authentication);
         mealRepository.delete(meal);
         log.info("Удален прием пищи: {}", meal);
+    }
+    private boolean isLegalAccess(Meal meal, Authentication authentication) {
+        User user = findUser(authentication);
+        return authService.hasAdminRole(authentication) || meal.getUser().equals(user);
+    }
+    private User findUser(Authentication authentication) {
+        return userService.findByUsername(authentication.getName());
+    }
+    private PageRequest getPageRequest(Integer page) {
+        return PageRequest.of(page, pageSize, Sort.by(Sort.Direction.ASC, "id"));
     }
 }
