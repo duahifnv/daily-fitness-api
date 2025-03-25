@@ -53,4 +53,11 @@ public class MealController {
         mealMapper.updateMeal(meal, updateDto);
         mealService.saveMeal(meal);
     }
+    @Operation(summary = "Удалить прием пищи")
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("isAuthenticated()")
+    public void deleteMeal(@PathVariable Long id) {
+        mealService.removeMeal(id);
+    }
 }

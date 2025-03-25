@@ -1,6 +1,7 @@
 package com.fizalise.dailyfitness.service;
 
 import com.fizalise.dailyfitness.dto.MealDto;
+import com.fizalise.dailyfitness.entity.Dish;
 import com.fizalise.dailyfitness.entity.Meal;
 import com.fizalise.dailyfitness.exception.ResourceNotFoundException;
 import com.fizalise.dailyfitness.repository.MealRepository;
@@ -36,5 +37,11 @@ public class MealService {
         mealRepository.save(meal);
         log.info("Сохранен прием пищи: {}", meal);
         return meal;
+    }
+    @Transactional
+    public void removeMeal(Long id) {
+        Meal meal = findMeal(id);
+        mealRepository.delete(meal);
+        log.info("Удален прием пищи: {}", meal);
     }
 }
