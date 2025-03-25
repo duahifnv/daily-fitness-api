@@ -3,6 +3,7 @@ package com.fizalise.dailyfitness.service;
 import com.fizalise.dailyfitness.dto.authentication.AuthenticationRequest;
 import com.fizalise.dailyfitness.dto.authentication.JwtResponse;
 import com.fizalise.dailyfitness.dto.authentication.UserRequest;
+import com.fizalise.dailyfitness.dto.authentication.UserResponse;
 import com.fizalise.dailyfitness.entity.Role;
 import com.fizalise.dailyfitness.entity.User;
 import com.fizalise.dailyfitness.exception.CustomBadCredentialsException;
@@ -56,6 +57,9 @@ public record AuthService(JwtService jwtService,
         } catch (InternalAuthenticationServiceException e) {
             throw new UserNotFoundException();
         }
+    }
+    public UserResponse getUser(Authentication authentication) {
+        return userMapper.toResponse(userService.findByUsername(authentication.getName()));
     }
     public void updateUser(UserRequest userRequest, Authentication authentication) {
         User contextUser = userService.findByUsername(authentication.getName());

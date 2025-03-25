@@ -3,6 +3,7 @@ package com.fizalise.dailyfitness.controller;
 import com.fizalise.dailyfitness.dto.authentication.AuthenticationRequest;
 import com.fizalise.dailyfitness.dto.authentication.JwtResponse;
 import com.fizalise.dailyfitness.dto.authentication.UserRequest;
+import com.fizalise.dailyfitness.dto.authentication.UserResponse;
 import com.fizalise.dailyfitness.entity.Role;
 import com.fizalise.dailyfitness.entity.User;
 import com.fizalise.dailyfitness.mapper.UserMapper;
@@ -34,6 +35,13 @@ public class AuthController {
     @ResponseStatus(HttpStatus.OK)
     public JwtResponse authenticateUser(@Valid @RequestBody AuthenticationRequest authenticationRequest) {
         return authService.authenticate(authenticationRequest);
+    }
+    @Operation(summary = "Получить информацию о себе")
+    @GetMapping("/me")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("isAuthenticated()")
+    public UserResponse getUser(Authentication authentication) {
+        return authService.getUser(authentication);
     }
     @Operation(summary = "Изменить информацию о себе")
     @PutMapping("/me")
