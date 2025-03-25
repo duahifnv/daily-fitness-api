@@ -71,7 +71,7 @@ public class MealController {
         mealService.removeMeal(id, authentication);
     }
     @Operation(summary = "Получить отчет за день")
-    @GetMapping("/report")
+    @GetMapping("/daily/report")
     @ResponseStatus(HttpStatus.OK)
     public DailyReport getDailyReport(@RequestParam(required = false)
             @Schema(description = "Дата отчета (по умолчанию сегодняшний)") Optional<LocalDate> date,
@@ -79,5 +79,22 @@ public class MealController {
         LocalDate localDate = date.orElse(LocalDate.now());
         List<Meal> meals = mealService.findAllMeals(localDate, authentication);
         return mealMapper.toReport(meals, localDate, authentication);
+    }
+    /**
+     * Проверка, уложился ли пользователь в дневную норму
+     * @return true - значение дневной нормы больше чем съеденные калории за день,
+     *         false - в ином случае
+     */
+    @Operation(summary = "Проверить дневную норму",
+            description = "Проверка, уложился ли пользователь в дневную норму")
+    @GetMapping("/daily/is-norm")
+    @ResponseStatus(HttpStatus.OK)
+    public boolean isDailyNorm(@Schema(description = "Дата (по умолчанию сегодняшняя)") Optional<LocalDate> date,
+                               Authentication authentication) {
+        int summedMealsCalories = mealMapper.sumMealsCalories(
+                mealService.findAllMeals(date.orElse(LocalDate.now()), authentication)
+        );
+        int dailyNorm = mealMapper.getUser(authentication).getDailyNorm();
+        return summedMealsCalories <= dailyNorm;
     }
 }
