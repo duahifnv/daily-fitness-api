@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +31,10 @@ public class MealService {
                                    Authentication authentication) {
         User user = findUser(authentication);
         return mealRepository.findAllByUser(user, getPageRequest(page));
+    }
+    public List<Meal> findAllMeals(LocalDate date, Authentication authentication) {
+        User user = findUser(authentication);
+        return mealRepository.findAllByUserAndDate(user, date);
     }
     public Page<Meal> findAllMeals(LocalDate date, @Min(0) Integer page,
                                    Authentication authentication) {

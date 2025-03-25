@@ -2,7 +2,10 @@ package com.fizalise.dailyfitness.controller;
 
 import com.fizalise.dailyfitness.dto.MealDto;
 import com.fizalise.dailyfitness.dto.MealUpdateDto;
+import com.fizalise.dailyfitness.dto.reports.DailyReport;
+import com.fizalise.dailyfitness.dto.reports.MealReport;
 import com.fizalise.dailyfitness.entity.Meal;
+import com.fizalise.dailyfitness.entity.Portion;
 import com.fizalise.dailyfitness.mapper.MealMapper;
 import com.fizalise.dailyfitness.service.MealService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,7 +18,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/meals")
@@ -65,5 +70,37 @@ public class MealController {
     @ResponseStatus(HttpStatus.OK)
     public void deleteMeal(@PathVariable Long id, Authentication authentication) {
         mealService.removeMeal(id, authentication);
+    }
+    @Operation(summary = "Получить отчет за день")
+    @GetMapping("/report")
+    @ResponseStatus(HttpStatus.OK)
+    public DailyReport getDailyReport(@RequestParam(required = false)
+            @Schema(description = "Дата отчета (по умолчанию сегодняшний)") Optional<LocalDate> date,
+                                          Authentication authentication) {
+        List<Meal> meals = mealService.findAllMeals(date.orElse(LocalDate.now()), authentication);
+        List<MealReport> mealReports = new ArrayList<>();
+        for (Meal meal : meals) {
+            var mealReport = MealReport.builder()
+                    .name(meal.getName())
+                    .portions(mealMapper.toPortionDtos(meal.getPortions()))
+                    .totalCalories(sumPortionsCalories(meal.getPortions())) // todo: Неверный счет
+                    .build();
+            mealReports.add(mealReport);
+        }
+        return DailyReport.builder()
+                .date(date.orElse(LocalDate.now()))
+                .totalCalories(sumMealReportsCalories(mealReports))
+                .mealReports(mealReports)
+                .build();
+    }
+    private int sumPortionsCalories(List<Portion> portions) {
+        return portions.stream()
+                .mapToInt(p -> p.getDish().getCals() * p.getGrams() / 100)
+                .sum();
+    }
+    private int sumMealReportsCalories(List<MealReport> mealReports) {
+        return mealReports.stream()
+                .mapToInt(MealReport::totalCalories)
+                .sum();
     }
 }
