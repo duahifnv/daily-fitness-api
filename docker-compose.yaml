@@ -2,9 +2,10 @@ services:
   fitness-db:
     container_name: fitness-db
     image: postgres:17.2
+    env_file: .env.example
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: secret
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       PGDATA: /var/lib/postgresql/data
     volumes:
       - ./docker/initdb:/docker-entrypoint-initdb.d
@@ -20,10 +21,6 @@ services:
       dockerfile: /docker/spring-boot/Dockerfile
     environment:
       SPRING_CONFIG_LOCATION: /config/application.yml
-
-      SPRING_DATASOURCE_URL: jdbc:postgresql://fitness-db/fitness_db
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: secret
     volumes:
       - ./src/main/resources/application.yml:/config/application.yml
       - ./:/app

@@ -1,10 +1,12 @@
 spring:
   application:
     name: daily-fitness-api
+  config:
+    import: optional:file:.env.example[.properties]
   datasource:
-    url: jdbc:postgresql://localhost:5433/fitness_db
-    username: postgres
-    password: secret
+    url: ${POSTGRES_URL}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
