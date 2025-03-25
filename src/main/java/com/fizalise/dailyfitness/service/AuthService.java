@@ -10,7 +10,6 @@ import com.fizalise.dailyfitness.exception.CustomBadCredentialsException;
 import com.fizalise.dailyfitness.exception.ResourceNotFoundException;
 import com.fizalise.dailyfitness.exception.UserNotFoundException;
 import com.fizalise.dailyfitness.mapper.UserMapper;
-import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
