@@ -97,4 +97,14 @@ public class MealController {
         int dailyNorm = mealMapper.getUser(authentication).getDailyNorm();
         return summedMealsCalories <= dailyNorm;
     }
+    @Operation(summary = "Получить историю питания по дням")
+    @GetMapping("/daily/history")
+    @ResponseStatus(HttpStatus.OK)
+    public List<MealReport> getMealHistory(@Schema(description = "Дата (по умолчанию сегодняшняя)")
+                                               Optional<LocalDate> date,
+                                           Authentication authentication) {
+        return mealMapper.toMealReports(
+                mealService.findAllMeals(date.orElse(LocalDate.now()), authentication).stream().toList()
+        );
+    }
 }
