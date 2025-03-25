@@ -15,6 +15,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.util.Date;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j(topic = "Сервис приема пищи")
@@ -24,9 +27,15 @@ public class MealService {
     private final MealRepository mealRepository;
     private final UserService userService;
     private final AuthService authService;
-    public Page<Meal> findAllMeals(@Min(0) Integer page, Authentication authentication) {
+    public Page<Meal> findAllMeals(@Min(0) Integer page,
+                                   Authentication authentication) {
         User user = findUser(authentication);
         return mealRepository.findAllByUser(user, getPageRequest(page));
+    }
+    public Page<Meal> findAllMeals(LocalDate date, @Min(0) Integer page,
+                                   Authentication authentication) {
+        User user = findUser(authentication);
+        return mealRepository.findAllByUserAndDate(user, date, getPageRequest(page));
     }
     public Meal findMeal(Long id, Authentication authentication) {
         Meal meal = mealRepository.findById(id)
@@ -57,6 +66,6 @@ public class MealService {
         return userService.findByUsername(authentication.getName());
     }
     private PageRequest getPageRequest(Integer page) {
-        return PageRequest.of(page, pageSize, Sort.by(Sort.Direction.ASC, "id"));
+        return PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "date"));
     }
 }

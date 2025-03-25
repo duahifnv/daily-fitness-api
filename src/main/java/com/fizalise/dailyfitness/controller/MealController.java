@@ -6,14 +6,15 @@ import com.fizalise.dailyfitness.entity.Meal;
 import com.fizalise.dailyfitness.mapper.MealMapper;
 import com.fizalise.dailyfitness.service.MealService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -25,8 +26,14 @@ public class MealController {
     @Operation(summary = "Получить список всех приемов пищи пользователя")
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<MealDto> getAllMeals(@RequestParam(defaultValue = "0") @Min(0) Integer page,
+    public List<MealDto> getAllMeals(@RequestParam(defaultValue = "0") @Min(0)
+                                         Integer page,
+                                     @RequestParam(required = false) @Schema(description = "Дата приема пищи")
+                                     LocalDate date,
                                      Authentication authentication) {
+        if (date != null) {
+            return mealMapper.toDtos(mealService.findAllMeals(date, page, authentication));
+        }
         return mealMapper.toDtos(mealService.findAllMeals(page, authentication));
     }
     @Operation(summary = "Получить прием пищи")

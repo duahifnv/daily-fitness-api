@@ -24,7 +24,6 @@ public abstract class MealMapper {
     @Autowired
     private DishService dishService;
     @Mapping(target = "userId", expression = "java(meal.getUser().getId())")
-    @Mapping(target = "date", expression = "java(LocalDate.now())")
     @Mapping(target = "portions", qualifiedByName = "toPortionDtos")
     public abstract MealDto toDto(Meal meal);
     public abstract List<MealDto> toDtos(Page<Meal> meals);
