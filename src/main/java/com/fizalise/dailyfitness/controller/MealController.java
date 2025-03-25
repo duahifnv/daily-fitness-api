@@ -19,7 +19,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/meals")
 @RequiredArgsConstructor
-@PreAuthorize("isAuthenticated()")
 public class MealController {
     private final MealService mealService;
     private final MealMapper mealMapper;

@@ -23,8 +23,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
     private final UserService userService;
     private final AuthorizationFilter authorizationFilter;
-    private final String[] freeResourceUrls = {"/account/*", "/dishes/**", "/meals/**",
-            "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**",
+    private final String[] freeResourceUrls = {"/account/*", "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**",
             "/swagger-resources/**", "/api-docs/**", "/aggregate/**", "/actuator/prometheus"};
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
