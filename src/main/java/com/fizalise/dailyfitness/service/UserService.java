@@ -29,6 +29,9 @@ public class UserService {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException(email));
     }
+    public User findByUsername(String username) {
+        return (User) getUserDetailsService().loadUserByUsername(username);
+    }
     public UserDetailsService getUserDetailsService() {
         return this::findByEmail;
     }

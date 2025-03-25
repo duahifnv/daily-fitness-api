@@ -22,11 +22,13 @@ import java.util.List;
 public class MealController {
     private final MealService mealService;
     private final MealMapper mealMapper;
-    @Operation(summary = "Получить список всех приемов пищи")
+    @Operation(summary = "Получить список всех приемов пищи пользователя")
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<MealDto> getAllMeals(@RequestParam(defaultValue = "0") @Min(0) Integer page) {
-        return mealMapper.toDtos(mealService.findAllMeals(page));
+    @PreAuthorize("isAuthenticated()")
+    public List<MealDto> getAllMeals(@RequestParam(defaultValue = "0") @Min(0) Integer page,
+                                     Authentication authentication) {
+        return mealMapper.toDtos(mealService.findAllMeals(page, authentication));
     }
     @Operation(summary = "Получить прием пищи")
     @GetMapping("/{id}")
