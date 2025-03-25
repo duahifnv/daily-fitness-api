@@ -1,19 +1,19 @@
 package com.fizalise.dailyfitness.mapper;
 
+import com.fizalise.dailyfitness.dto.DishDto;
 import com.fizalise.dailyfitness.dto.MealDto;
 import com.fizalise.dailyfitness.dto.MealUpdateDto;
 import com.fizalise.dailyfitness.dto.PortionDto;
 import com.fizalise.dailyfitness.dto.reports.DailyReport;
 import com.fizalise.dailyfitness.dto.reports.MealReport;
+import com.fizalise.dailyfitness.dto.reports.PortionReport;
 import com.fizalise.dailyfitness.entity.Dish;
 import com.fizalise.dailyfitness.entity.Meal;
 import com.fizalise.dailyfitness.entity.Portion;
 import com.fizalise.dailyfitness.entity.User;
 import com.fizalise.dailyfitness.service.DishService;
 import com.fizalise.dailyfitness.service.UserService;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Named;
+import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
@@ -28,6 +28,9 @@ public abstract class MealMapper {
     private UserService userService;
     @Autowired
     private DishService dishService;
+    @Autowired
+    private DishMapper dishMapper;
+
     @Mapping(target = "userId", expression = "java(meal.getUser().getId())")
     @Mapping(target = "portions", qualifiedByName = "toPortionDtos")
     public abstract MealDto toDto(Meal meal);
@@ -46,7 +49,7 @@ public abstract class MealMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(source = "mealDto.name", target = "name")
     @Mapping(target = "date", expression = "java(LocalDate.now())")
-    @Mapping(source = "authentication", target = "user", qualifiedByName = "getUserId")
+    @Mapping(source = "authentication", target = "user", qualifiedByName = "getUser")
     @Mapping(target = "portions", qualifiedByName = "toPortions")
     public abstract Meal toMeal(MealDto mealDto, Authentication authentication);
 
@@ -54,7 +57,7 @@ public abstract class MealMapper {
         meal.setName(updateDto.name());
     }
 
-    @Named("getUserId")
+    @Named("getUser")
     public User getUser(Authentication authentication) {
         return userService.findByEmail(authentication.getName());
     }
@@ -62,20 +65,35 @@ public abstract class MealMapper {
     public Dish getDish(Long dishId) {
         return dishService.findDish(dishId);
     }
-
+    @Named("toDishDto")
+    public DishDto toDishDto(Dish dish) {
+        return dishMapper.toDto(dish);
+    }
     /*
     Маппинг отчетов
      */
     @Mapping(source = "meals", target = "totalCalories", qualifiedByName = "sumMealsCalories")
     @Mapping(source = "meals", target = "mealReports", qualifiedByName = "getMealReports")
-    public abstract DailyReport toReport(List<Meal> meals, LocalDate date);
+    public abstract DailyReport toReport(List<Meal> meals, LocalDate date, Authentication authentication);
 
-    @Mapping(target = "portions", qualifiedByName = "toPortionDtos")
+    @AfterMapping
+    public void differenceWithDailyNorm(@MappingTarget DailyReport dailyReport, Authentication authentication) {
+        int dailyNorm = getUser(authentication).getDailyNorm();
+        dailyReport.setDifferenceWithDailyNorm(dailyReport.getTotalCalories() - dailyNorm);
+    }
+
+    @Mapping(target = "portions", qualifiedByName = "toPortionReports")
     @Mapping(source = "meal.portions", target = "totalCalories", qualifiedByName = "sumPortionsCalories")
     public abstract MealReport toMealReport(Meal meal);
 
+    @Mapping(target = "dish", qualifiedByName = "toDishDto")
+    public abstract PortionReport toPortionReport(Portion portion);
+
+    @Named("toPortionReports")
+    public abstract List<PortionReport> toPortionReports(List<Portion> portions);
     @Named("getMealReports")
     public abstract List<MealReport> toMealReports(List<Meal> meal);
+
     @Named("sumPortionsCalories")
     public int sumPortionsCalories(List<Portion> portions) {
         return portions.stream()

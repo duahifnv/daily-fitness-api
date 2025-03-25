@@ -18,7 +18,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -79,6 +78,6 @@ public class MealController {
                                           Authentication authentication) {
         LocalDate localDate = date.orElse(LocalDate.now());
         List<Meal> meals = mealService.findAllMeals(localDate, authentication);
-        return mealMapper.toReport(meals, localDate);
+        return mealMapper.toReport(meals, localDate, authentication);
     }
 }
