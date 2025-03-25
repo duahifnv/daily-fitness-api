@@ -4,7 +4,7 @@ spring:
   config:
     import: optional:file:.env.example[.properties]
   datasource:
-    url: ${POSTGRES_URL}
+    url: ${POSTGRES_LOCAL_URL}
     username: ${POSTGRES_USER}
     password: ${POSTGRES_PASSWORD}
     driver-class-name: org.postgresql.Driver
@@ -16,7 +16,7 @@ spring:
 pagination:
   page-size: 5
 server:
-  port: 9000
+  port: 8080
   error:
     include-message: always
   servlet:

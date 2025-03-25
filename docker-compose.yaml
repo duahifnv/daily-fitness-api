@@ -28,7 +28,7 @@ services:
     depends_on:
       - fitness-db
     ports:
-      - "8080:8080"
+      - "9000:9000"
 volumes:
   fitness-db-data:
   maven-repository-data:
