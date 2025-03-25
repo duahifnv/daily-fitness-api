@@ -7,6 +7,7 @@ import com.fizalise.dailyfitness.entity.Role;
 import com.fizalise.dailyfitness.entity.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,11 +19,17 @@ import java.util.List;
 public abstract class UserMapper {
     @Autowired
     protected PasswordEncoder passwordEncoder;
+
     @Mapping(target = "password", qualifiedByName = "getEncodedPassword")
     @Mapping(source = "requestUser", target = "dailyNorm", qualifiedByName = "getCalculatedDailyNorm")
     public abstract User toUser(UserRequest requestUser, Role role);
+
+    public abstract void updateUser(@MappingTarget User user, UserRequest userRequest);
+
     public abstract UserResponse toResponse(User user);
+
     public abstract List<UserResponse> toResponses(Page<User> users);
+
     @Named("getEncodedPassword")
     protected String encodePassword(String password) {
         return passwordEncoder.encode(password);

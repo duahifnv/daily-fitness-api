@@ -6,8 +6,10 @@ import com.fizalise.dailyfitness.dto.authentication.UserRequest;
 import com.fizalise.dailyfitness.entity.Role;
 import com.fizalise.dailyfitness.entity.User;
 import com.fizalise.dailyfitness.exception.CustomBadCredentialsException;
+import com.fizalise.dailyfitness.exception.ResourceNotFoundException;
 import com.fizalise.dailyfitness.exception.UserNotFoundException;
 import com.fizalise.dailyfitness.mapper.UserMapper;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -54,6 +56,15 @@ public record AuthService(JwtService jwtService,
         } catch (InternalAuthenticationServiceException e) {
             throw new UserNotFoundException();
         }
+    }
+    public void updateUser(UserRequest userRequest, Authentication authentication) {
+        User contextUser = userService.findByUsername(authentication.getName());
+        if (!contextUser.getUsername().equals(userRequest.email())) {
+            log.info("Попытка изменения чужой информации от пользователя {}", authentication.getName());
+            throw new ResourceNotFoundException();
+        }
+        userMapper.updateUser(contextUser, userRequest);
+        userService.saveUser(contextUser);
     }
     public boolean hasAdminRole(Authentication authentication) {
         return getAuthorities(authentication).contains(Role.ROLE_ADMIN.name());
