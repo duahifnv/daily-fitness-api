@@ -11,5 +11,7 @@ public record MealReport(@Schema(description = "Название приема п
                          @Schema(description = "Список порций блюд")
                          List<PortionReport> portions,
                          @Schema(description = "Всего калорий", example = "1800")
-                         Integer totalCalories) {
+                         Integer totalCalories,
+                         @Schema(description = "БЖУ")
+                         NutritionDto nutrition) {
 }

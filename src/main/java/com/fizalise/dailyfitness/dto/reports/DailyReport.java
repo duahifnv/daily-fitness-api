@@ -16,6 +16,8 @@ public final class DailyReport {
     private LocalDate date;
     @Schema(description = "Всего калорий", example = "1800")
     private Integer totalCalories;
+    @Schema(description = "БЖУ")
+    private NutritionDto totalNutrition;
     @Schema(description = "Разница с дневной нормой", example = "-250")
     private Integer differenceWithDailyNorm;
     @Schema(description = "Список приемов пищи")

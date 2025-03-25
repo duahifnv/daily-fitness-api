@@ -6,6 +6,7 @@ import com.fizalise.dailyfitness.dto.MealUpdateDto;
 import com.fizalise.dailyfitness.dto.PortionDto;
 import com.fizalise.dailyfitness.dto.reports.DailyReport;
 import com.fizalise.dailyfitness.dto.reports.MealReport;
+import com.fizalise.dailyfitness.dto.reports.NutritionDto;
 import com.fizalise.dailyfitness.dto.reports.PortionReport;
 import com.fizalise.dailyfitness.entity.Dish;
 import com.fizalise.dailyfitness.entity.Meal;
@@ -20,7 +21,6 @@ import org.springframework.security.core.Authentication;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @Mapper(componentModel = "spring", imports = LocalDate.class)
 public abstract class MealMapper {
@@ -72,18 +72,14 @@ public abstract class MealMapper {
     /*
     Маппинг отчетов
      */
-    @Mapping(source = "meals", target = "totalCalories", qualifiedByName = "sumMealsCalories")
     @Mapping(source = "meals", target = "mealReports", qualifiedByName = "getMealReports")
+    @Mapping(source = "meals", target = "totalCalories", qualifiedByName = "sumMealsCalories")
+    @Mapping(source = "meals", target = "totalNutrition", qualifiedByName = "sumMealsNutrition")
     public abstract DailyReport toReport(List<Meal> meals, LocalDate date, Authentication authentication);
-
-    @AfterMapping
-    public void differenceWithDailyNorm(@MappingTarget DailyReport dailyReport, Authentication authentication) {
-        int dailyNorm = getUser(authentication).getDailyNorm();
-        dailyReport.setDifferenceWithDailyNorm(dailyReport.getTotalCalories() - dailyNorm);
-    }
 
     @Mapping(target = "portions", qualifiedByName = "toPortionReports")
     @Mapping(source = "meal.portions", target = "totalCalories", qualifiedByName = "sumPortionsCalories")
+    @Mapping(source = "meal.portions", target = "nutrition", qualifiedByName = "sumPortionsNutrition")
     public abstract MealReport toMealReport(Meal meal);
 
     @Mapping(target = "dish", qualifiedByName = "toDishDto")
@@ -106,5 +102,41 @@ public abstract class MealMapper {
         return mealReports.stream()
                 .mapToInt(MealReport::totalCalories)
                 .sum();
+    }
+    @Named("sumPortionsNutrition")
+    public NutritionDto sumPortionsNutrition(List<Portion> portions) {
+        int proteinsSum = 0;
+        int fatsSum = 0;
+        int carbsSum = 0;
+        for (var portion : portions) {
+            proteinsSum += portion.getDish().getProteins() * portion.getGrams() / 100;
+            fatsSum += portion.getDish().getFats() * portion.getGrams() / 100;
+            carbsSum += portion.getDish().getCarbs() * portion.getGrams() / 100;
+        }
+        return NutritionDto.builder()
+                .proteins(proteinsSum)
+                .fats(fatsSum)
+                .carbs(carbsSum).build();
+    }
+    @Named("sumMealsNutrition")
+    public NutritionDto sumMealsNutrition(List<Meal> meals) {
+        var mealReports = toMealReports(meals);
+        int proteinsSum = 0;
+        int fatsSum = 0;
+        int carbsSum = 0;
+        for (var mealReport : mealReports) {
+            proteinsSum += mealReport.nutrition().proteins();
+            fatsSum += mealReport.nutrition().fats();
+            carbsSum += mealReport.nutrition().carbs();
+        }
+        return NutritionDto.builder()
+                .proteins(proteinsSum)
+                .fats(fatsSum)
+                .carbs(carbsSum).build();
+    }
+    @AfterMapping
+    public void differenceWithDailyNorm(@MappingTarget DailyReport dailyReport, Authentication authentication) {
+        int dailyNorm = getUser(authentication).getDailyNorm();
+        dailyReport.setDifferenceWithDailyNorm(dailyReport.getTotalCalories() - dailyNorm);
     }
 }
