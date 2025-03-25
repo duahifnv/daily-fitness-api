@@ -1,6 +1,6 @@
 package com.fizalise.dailyfitness.mapper;
 
-import com.fizalise.dailyfitness.dto.authentication.RegistrationRequest;
+import com.fizalise.dailyfitness.dto.authentication.UserRequest;
 import com.fizalise.dailyfitness.dto.authentication.UserResponse;
 import com.fizalise.dailyfitness.entity.Gender;
 import com.fizalise.dailyfitness.entity.Role;
@@ -20,7 +20,7 @@ public abstract class UserMapper {
     protected PasswordEncoder passwordEncoder;
     @Mapping(target = "password", qualifiedByName = "getEncodedPassword")
     @Mapping(source = "requestUser", target = "dailyNorm", qualifiedByName = "getCalculatedDailyNorm")
-    public abstract User toUser(RegistrationRequest requestUser, Role role);
+    public abstract User toUser(UserRequest requestUser, Role role);
     public abstract UserResponse toResponse(User user);
     public abstract List<UserResponse> toResponses(Page<User> users);
     @Named("getEncodedPassword")
@@ -28,7 +28,7 @@ public abstract class UserMapper {
         return passwordEncoder.encode(password);
     }
     @Named("getCalculatedDailyNorm")
-    protected int harrisBenedict(RegistrationRequest requestUser) {
+    protected int harrisBenedict(UserRequest requestUser) {
         double weight = requestUser.weight().doubleValue();
         double growth = requestUser.growth().doubleValue();
         double age = requestUser.age();

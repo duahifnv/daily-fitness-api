@@ -9,7 +9,7 @@ import org.hibernate.validator.constraints.Length;
 
 import java.math.BigDecimal;
 
-public record RegistrationRequest(
+public record UserRequest(
                                   @NotBlank
                                   @Schema(description = "Имя пользователя", example = "Юзер")
                                   String name,
@@ -24,14 +24,17 @@ public record RegistrationRequest(
                                   @NotNull
                                   @Schema(description = "Пол", enumAsRef = true)
                                   Gender gender,
-                                  @NotNull @Min(18) @Max(99)
-                                  @Schema(description = "Возраст", minimum = "18", maximum = "99", example = "25")
+                                  @NotNull @Min(18) @Max(150)
+                                  @Schema(description = "Возраст", minimum = "18", maximum = "150",
+                                          example = "25")
                                   Integer age,
-                                  @NotNull @Min(0)
-                                  @Schema(description = "Вес", minimum = "0", example = "70")
+                                  @NotNull @Min(10) @Max(500)
+                                  @Schema(description = "Вес", minimum = "10", maximum = "500",
+                                          example = "70")
                                   BigDecimal weight,
-                                  @NotNull @Min(0)
-                                  @Schema(description = "Рост", minimum = "0", example = "180")
+                                  @NotNull @Min(50) @Max(250)
+                                  @Schema(description = "Рост", minimum = "50", maximum = "250",
+                                          example = "180")
                                   BigDecimal growth,
                                   @NotNull
                                   @Schema(description = "Цель", enumAsRef = true)

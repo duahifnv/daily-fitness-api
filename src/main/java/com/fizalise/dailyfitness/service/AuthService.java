@@ -2,7 +2,7 @@ package com.fizalise.dailyfitness.service;
 
 import com.fizalise.dailyfitness.dto.authentication.AuthenticationRequest;
 import com.fizalise.dailyfitness.dto.authentication.JwtResponse;
-import com.fizalise.dailyfitness.dto.authentication.RegistrationRequest;
+import com.fizalise.dailyfitness.dto.authentication.UserRequest;
 import com.fizalise.dailyfitness.entity.Role;
 import com.fizalise.dailyfitness.entity.User;
 import com.fizalise.dailyfitness.exception.CustomBadCredentialsException;
@@ -25,9 +25,9 @@ public record AuthService(JwtService jwtService,
                           UserService userService,
                           UserMapper userMapper,
                           AuthenticationManager authenticationManager) {
-    public JwtResponse registerNewUser(RegistrationRequest registrationRequest) {
+    public JwtResponse registerNewUser(UserRequest userRequest) {
         User user = userService.createUser(
-                userMapper.toUser(registrationRequest, Role.ROLE_USER)
+                userMapper.toUser(userRequest, Role.ROLE_USER)
         );
         log.info("Зарегистрирован новый пользователь: {}", user);
         return new JwtResponse(
