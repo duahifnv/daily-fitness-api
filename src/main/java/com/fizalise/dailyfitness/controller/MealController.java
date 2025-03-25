@@ -77,30 +77,8 @@ public class MealController {
     public DailyReport getDailyReport(@RequestParam(required = false)
             @Schema(description = "Дата отчета (по умолчанию сегодняшний)") Optional<LocalDate> date,
                                           Authentication authentication) {
-        List<Meal> meals = mealService.findAllMeals(date.orElse(LocalDate.now()), authentication);
-        List<MealReport> mealReports = new ArrayList<>();
-        for (Meal meal : meals) {
-            var mealReport = MealReport.builder()
-                    .name(meal.getName())
-                    .portions(mealMapper.toPortionDtos(meal.getPortions()))
-                    .totalCalories(sumPortionsCalories(meal.getPortions())) // todo: Неверный счет
-                    .build();
-            mealReports.add(mealReport);
-        }
-        return DailyReport.builder()
-                .date(date.orElse(LocalDate.now()))
-                .totalCalories(sumMealReportsCalories(mealReports))
-                .mealReports(mealReports)
-                .build();
-    }
-    private int sumPortionsCalories(List<Portion> portions) {
-        return portions.stream()
-                .mapToInt(p -> p.getDish().getCals() * p.getGrams() / 100)
-                .sum();
-    }
-    private int sumMealReportsCalories(List<MealReport> mealReports) {
-        return mealReports.stream()
-                .mapToInt(MealReport::totalCalories)
-                .sum();
+        LocalDate localDate = date.orElse(LocalDate.now());
+        List<Meal> meals = mealService.findAllMeals(localDate, authentication);
+        return mealMapper.toReport(meals, localDate);
     }
 }

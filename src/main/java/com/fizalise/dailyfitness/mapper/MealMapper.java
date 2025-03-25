@@ -3,6 +3,8 @@ package com.fizalise.dailyfitness.mapper;
 import com.fizalise.dailyfitness.dto.MealDto;
 import com.fizalise.dailyfitness.dto.MealUpdateDto;
 import com.fizalise.dailyfitness.dto.PortionDto;
+import com.fizalise.dailyfitness.dto.reports.DailyReport;
+import com.fizalise.dailyfitness.dto.reports.MealReport;
 import com.fizalise.dailyfitness.entity.Dish;
 import com.fizalise.dailyfitness.entity.Meal;
 import com.fizalise.dailyfitness.entity.Portion;
@@ -18,6 +20,7 @@ import org.springframework.security.core.Authentication;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Mapper(componentModel = "spring", imports = LocalDate.class)
 public abstract class MealMapper {
@@ -58,5 +61,32 @@ public abstract class MealMapper {
     @Named("getDish")
     public Dish getDish(Long dishId) {
         return dishService.findDish(dishId);
+    }
+
+    /*
+    Маппинг отчетов
+     */
+    @Mapping(source = "meals", target = "totalCalories", qualifiedByName = "sumMealsCalories")
+    @Mapping(source = "meals", target = "mealReports", qualifiedByName = "getMealReports")
+    public abstract DailyReport toReport(List<Meal> meals, LocalDate date);
+
+    @Mapping(target = "portions", qualifiedByName = "toPortionDtos")
+    @Mapping(source = "meal.portions", target = "totalCalories", qualifiedByName = "sumPortionsCalories")
+    public abstract MealReport toMealReport(Meal meal);
+
+    @Named("getMealReports")
+    public abstract List<MealReport> toMealReports(List<Meal> meal);
+    @Named("sumPortionsCalories")
+    public int sumPortionsCalories(List<Portion> portions) {
+        return portions.stream()
+                .mapToInt(p -> p.getDish().getCals() * p.getGrams() / 100)
+                .sum();
+    }
+    @Named("sumMealsCalories")
+    public int sumMealsCalories(List<Meal> meals) {
+        var mealReports = toMealReports(meals);
+        return mealReports.stream()
+                .mapToInt(MealReport::totalCalories)
+                .sum();
     }
 }
