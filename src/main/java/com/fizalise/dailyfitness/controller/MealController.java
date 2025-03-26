@@ -5,7 +5,6 @@ import com.fizalise.dailyfitness.dto.MealUpdateDto;
 import com.fizalise.dailyfitness.dto.reports.DailyReport;
 import com.fizalise.dailyfitness.dto.reports.MealReport;
 import com.fizalise.dailyfitness.entity.Meal;
-import com.fizalise.dailyfitness.entity.Portion;
 import com.fizalise.dailyfitness.mapper.MealMapper;
 import com.fizalise.dailyfitness.service.MealService;
 import io.swagger.v3.oas.annotations.Operation;
