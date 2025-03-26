@@ -5,6 +5,7 @@ import com.fizalise.dailyfitness.exception.ResourceNotFoundException;
 import com.fizalise.dailyfitness.repository.DishRepository;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -17,10 +18,9 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Slf4j(topic = "Сервис блюд")
 public class DishService {
-    @Value("${pagination.page-size}")
-    private int pageSize;
+    public final static int pageSize = 5;
     private final DishRepository dishRepository;
-    public Page<Dish> findAllDishes(@Min(0) Integer page) {
+    public Page<Dish> findAllDishes(Integer page) {
         return dishRepository.findAll(getPageRequest(page));
     }
     public Dish findDish(Long id) {

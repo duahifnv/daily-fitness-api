@@ -22,12 +22,11 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j(topic = "Сервис приема пищи")
 public class MealService {
-    @Value("${pagination.page-size}")
-    private int pageSize;
+    public static final int pageSize = 5;
     private final MealRepository mealRepository;
     private final UserService userService;
     private final AuthService authService;
-    public Page<Meal> findAllMeals(@Min(0) Integer page,
+    public Page<Meal> findAllMeals(Integer page,
                                    Authentication authentication) {
         User user = findUser(authentication);
         return mealRepository.findAllByUser(user, getPageRequest(page));
@@ -36,7 +35,7 @@ public class MealService {
         User user = findUser(authentication);
         return mealRepository.findAllByUserAndDate(user, date);
     }
-    public Page<Meal> findAllMeals(LocalDate date, @Min(0) Integer page,
+    public Page<Meal> findAllMeals(LocalDate date, Integer page,
                                    Authentication authentication) {
         User user = findUser(authentication);
         return mealRepository.findAllByUserAndDate(user, date, getPageRequest(page));

@@ -13,8 +13,6 @@ spring:
       ddl-auto: validate
   flyway:
     clean-disabled: false
-pagination:
-  page-size: 5
 server:
   port: 9000
   error:
